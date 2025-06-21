@@ -5,14 +5,20 @@ services:
     image: crowdsecurity/crowdsec:latest
     container_name: crowdsec
     restart: unless-stopped
+    ports:
+      - "8080:8080"  # LAPI accessible localement pour le bouncer
     volumes:
       - crowdsec-config:/etc/crowdsec
       - crowdsec-db:/var/lib/crowdsec/data
       - /var/log:/var/log:ro
-    ports:
-      - "8080:8080"
     environment:
       - TZ=Europe/Paris
+      - COLLECTIONS=crowdsecurity/linux crowdsecurity/sshd
+      - ENROLL_KEY=${ENROLL_KEY}
+      - ENROLL_INSTANCE_NAME=${ENROLL_INSTANCE_NAME:-pharmanIA-vps1}
+      - ENROLL_TAGS=${ENROLL_TAGS:-coolify}
+      - GID=1000
+      - UID=1000
 
   bouncer-firewall:
     image: ghcr.io/crowdsecurity/firewall-bouncer:latest
