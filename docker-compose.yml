@@ -1,0 +1,32 @@
+version: "3.8"
+
+services:
+  crowdsec:
+    image: crowdsecurity/crowdsec:latest
+    container_name: crowdsec
+    restart: unless-stopped
+    volumes:
+      - crowdsec-config:/etc/crowdsec
+      - crowdsec-db:/var/lib/crowdsec/data
+      - /var/log:/var/log:ro
+    ports:
+      - "8080:8080"
+    environment:
+      - TZ=Europe/Paris
+
+  bouncer-firewall:
+    image: crowdsecurity/crowdsec-firewall-bouncer:latest
+    container_name: cs-firewall-bouncer
+    network_mode: "host"
+    restart: unless-stopped
+    environment:
+      - CROWDSEC_LAPI_URL=http://localhost:8080/
+      - CROWDSEC_LAPI_KEY=${CROWDSEC_LAPI_KEY}
+    volumes:
+      - crowdsec-config:/etc/crowdsec:ro
+    cap_add:
+      - NET_ADMIN
+
+volumes:
+  crowdsec-config:
+  crowdsec-db:
