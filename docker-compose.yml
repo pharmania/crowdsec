@@ -10,7 +10,7 @@ services:
       - crowdsec-db:/var/lib/crowdsec/data
       - /var/log:/var/log:ro
     ports:
-      - "8080:8080"  # LAPI interne
+      - "8080:8080"  # LAPI locale pour le bouncer
     environment:
       - TZ=Europe/Paris
 
@@ -26,18 +26,6 @@ services:
       - crowdsec-config:/etc/crowdsec:ro
     cap_add:
       - NET_ADMIN
-
-  console:
-    image: ghcr.io/crowdsecurity/crowdsec-console:nightly
-    container_name: crowdsec-console
-    ports:
-      - "8081:8080"
-    environment:
-      - LAPI_URL=http://crowdsec:8080/
-      - LAPI_USERNAME=admin
-      - LAPI_PASSWORD=${CONSOLE_PASSWORD}
-      - LAPI_SKIP_VERIFY=true
-    restart: unless-stopped
 
 volumes:
   crowdsec-config:
