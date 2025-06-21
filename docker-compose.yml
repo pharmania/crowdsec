@@ -28,7 +28,7 @@ services:
       - NET_ADMIN
 
   console:
-    image: ghcr.io/crowdsecurity/crowdsec-console:latest
+    image: ghcr.io/crowdsecurity/crowdsec-console:nightly
     container_name: crowdsec-console
     ports:
       - "8081:8080"
